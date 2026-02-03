@@ -1,0 +1,64 @@
+#inflation model via FRED api 
+# created by Liam Oaks 2/2/25
+
+
+#data used: cpi, core cpi, cpi energy, average weekly earnigns, cpi housing
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from fredapi import FRED
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+
+API_KEY = "92d97b863d0c060684a148857cfccf6b"
+
+series = { 
+    "headline": "CPIAUCSL",
+    "core": "CPILFESL",
+    "energy": "CUUR0000SETB01",
+    "wages": "CEU0500000003",
+    "housing": "CUSR0000SEHA",
+}
+
+
+fred = Fred(api_key=API_KEY)
+
+raw={}
+for name, code in SERIES.items():
+    s= fred.get_series(code)
+    s.index = pd.to_datetime(s.index)
+    raw[name] = s
+df = pd.Dataframe(raw).resample("MS").last
+
+df = df.pct_change(periods=12) * 100
+df.dropna(inplace = True)
+
+
+y = df["headline"]
+X = df[["core", "energy", "wages", "housing"]]
+
+model = LinearRegression
+mode.fit(X, y)
+y_pred = model.predict(X)
+
+print("=" * 50)
+print("MODEL RESULTS")
+print("=" * 50)
+print(f"  Intercept : {model.intercept_:.4f}")
+for feat, coef in zip(X.columns, model.coef_):
+    print(f"  {feat:>10} : {coef:.4f}")
+print("-" * 50)
+print(f"  R²        : {r2_score(y, y_pred):.4f}")
+print(f"  Obs       : {len(y)}")
+print("=" * 50)
+
+
+
+plt.figure(figsize=(12, 5))
+plt.plot(y.index, y.values, label="Actual", color="steelblue")
+plt.plot(y.index, y_pred, label="Predicted", color="orange", linestyle="--")
+plt.title("Headline CPI Inflation — Actual vs. Predicted")
+plt.ylabel("YoY %")
+plt.legend()
+plt.tight_layout()
+plt.show()
