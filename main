@@ -1,5 +1,5 @@
 #inflation model via FRED api 
-# created by Liam Oaks 2/2/25
+# created by Liam Oaks 1/15/25
 
 
 #data used: cpi, core cpi, cpi energy, average weekly earnings, cpi housing
