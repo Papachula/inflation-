@@ -2,7 +2,7 @@
 # created by Liam Oaks 2/2/25
 
 
-#data used: cpi, core cpi, cpi energy, average weekly earnigns, cpi housing
+#data used: cpi, core cpi, cpi energy, average weekly earningns, cpi housing
 
 import pandas as pd
 import matplotlib.pyplot as plt
